@@ -10,3 +10,21 @@ const knex = require('../knex');
 //   .where('title', 'like', '%ways%')
 //   .then(results => console.log(JSON.stringify(results, null, 2)));
 
+// knex
+//   .select('title', 'content')
+//   .from('notes')
+//   .where('id', 1001)
+//   .then(results => console.log(JSON.stringify(results, null, 2)));
+
+// knex
+// .select('title', 'content')
+// .from('notes')
+// .where('id', 1001)
+// .update('title', 'Updated title for note 1001')
+// .then(results => console.log(JSON.stringify(results, null, 2)));
+
+knex
+.select('title')
+.from('notes')
+.where('id', 1001)
+.then(results => console.log(JSON.stringify(results, null, 2)));

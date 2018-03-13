@@ -52,6 +52,18 @@ router.get('/notes/:id', (req, res, next) => {
     })
     .catch(err => next(err));
   */
+  knex
+    .select('title', 'content')
+    .from('notes')
+    .where(function() {
+      if(noteId) {
+        this.where('id', `${noteId}`);
+      }
+    })
+    .then(item => {
+      res.json(item);
+    })
+    .catch(err => next(err));
 });
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
