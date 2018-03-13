@@ -4,6 +4,8 @@ const express = require('express');
 
 // Create an router instance (aka "mini-app")
 const router = express.Router();
+const knex = require('../knex');
+
 
 // TEMP: Simple In-Memory Database
 /* 
