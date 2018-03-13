@@ -55,7 +55,7 @@ router.get('/notes/:id', (req, res, next) => {
     .catch(err => next(err));
   */
   knex
-    .select('title', 'content')
+    .select('id', 'title', 'content')
     .from('notes')
     .where(function() {
       if(noteId) {
@@ -74,6 +74,7 @@ router.put('/notes/:id', (req, res, next) => {
   /***** Never trust users - validate input *****/
   const updateObj = {};
   const updateableFields = ['title', 'content'];
+  const {title, content} = req.body;
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -99,6 +100,19 @@ router.put('/notes/:id', (req, res, next) => {
     })
     .catch(err => next(err));
   */
+  const updatedItem = {title, content};
+  knex('notes')
+    .update(updatedItem)
+    .where('id', noteId)
+    .returning(['id', 'title', 'content'])
+    .then(([item]) => {
+      if(item) {
+        res.json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => next(err));
 });
 
 /* ========== POST/CREATE ITEM ========== */
