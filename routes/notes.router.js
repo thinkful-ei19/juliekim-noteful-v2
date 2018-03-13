@@ -136,6 +136,17 @@ router.post('/notes', (req, res, next) => {
     })
     .catch(err => next(err));
   */
+  knex('notes')
+    .insert(newItem)
+    .returning(['id', 'title', 'content'])
+    .then(([item]) => {
+      if(item) {
+        res.json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => next(err));
 });
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
@@ -153,6 +164,17 @@ router.delete('/notes/:id', (req, res, next) => {
     })
     .catch(err => next(err));
   */
+  knex('notes')
+    .where('id', `${id}`)
+    .del()
+    .then(count => {
+      if(count) {
+        res.status(204).end();
+      } else {
+        next();
+      }
+    })
+    .catch(err => next(err));
 });
 
 module.exports = router;
