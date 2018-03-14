@@ -140,11 +140,7 @@ router.post('/notes', (req, res, next) => {
     .insert(newItem)
     .returning(['id', 'title', 'content'])
     .then(([item]) => {
-      if(item) {
-        res.json(item);
-      } else {
-        next();
-      }
+      res.location(`${req.originalUrl}/${item.id}`).status(201).json(item);
     })
     .catch(err => next(err));
 });
