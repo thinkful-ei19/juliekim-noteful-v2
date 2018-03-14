@@ -17,7 +17,8 @@ const notes = simDB.initialize(data);
 // Get All (and search by query)
 /* ========== GET/READ ALL NOTES ========== */
 router.get('/notes', (req, res, next) => {
-  const { searchTerm } = req.query;
+  const searchTerm = req.query.searchTerm;
+  const folderId = req.query.folderId;
   /* 
   notes.filter(searchTerm)
     .then(list => {
@@ -26,13 +27,20 @@ router.get('/notes', (req, res, next) => {
     .catch(err => next(err)); 
   */
   knex
-    .select('id', 'title', 'content')
+    .select('notes.id', 'title', 'content', 'folders.id as folder_id', 'folders.name as folderName')
     .from('notes')
-    .where(function() {
+    .leftJoin('folders', 'notes.folder_id', 'folders.id')
+    .modify(function(queryBuilder) {
       if(searchTerm) {
-        this.where('title', 'like', `%${searchTerm}%`);
+        queryBuilder.where('title', 'like', `%${searchTerm}%`);
       }
     })
+    .modify(function(queryBuilder) {
+      if(folderId) {
+        queryBuilder.where('folder_id', folderId);
+      }
+    })
+    .orderBy('notes.id')
     .then(list => {
       res.json(list);
     })
@@ -55,14 +63,11 @@ router.get('/notes/:id', (req, res, next) => {
     .catch(err => next(err));
   */
   knex
-    .select('id', 'title', 'content')
+    .select('notes.id', 'title', 'content', 'folders.id as folder_id', 'folders.name as folderName')
     .from('notes')
-    .where(function() {
-      if(noteId) {
-        this.where('id', `${noteId}`);
-      }
-    })
-    .then(item => {
+    .leftJoin('folders', 'notes.folder_id', 'folders.id')
+    .where('notes.id', noteId)
+    .then(([item]) => {
       res.json(item);
     })
     .catch(err => next(err));
