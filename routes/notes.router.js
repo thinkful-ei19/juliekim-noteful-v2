@@ -79,7 +79,7 @@ router.put('/notes/:id', (req, res, next) => {
   /***** Never trust users - validate input *****/
   const updateObj = {};
   const updateableFields = ['title', 'content'];
-  const {title, content} = req.body;
+  const {title, content, folder_id} = req.body;
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -105,14 +105,21 @@ router.put('/notes/:id', (req, res, next) => {
     })
     .catch(err => next(err));
   */
-  const updatedItem = {title, content};
+  const updatedItem = {title, content, folder_id};
   knex('notes')
     .update(updatedItem)
     .where('id', noteId)
-    .returning(['id', 'title', 'content'])
-    .then(([item]) => {
-      if(item) {
-        res.json(item);
+    .returning(['id'])
+    .then(() => {
+      // Using the noteId, select the note and the folder info
+      return knex.select('notes.id', 'title', 'content', 'folder_id', 'folders.name as folder_name')
+        .from('notes')
+        .leftJoin('folders', 'notes.folder_id', 'folders.id')
+        .where('notes.id', noteId);
+    })
+    .then(([result]) => {
+      if(result) {
+        res.json(result);
       } else {
         next();
       }
