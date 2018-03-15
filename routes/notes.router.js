@@ -30,6 +30,8 @@ router.get('/notes', (req, res, next) => {
     .select('notes.id', 'title', 'content', 'folders.id as folder_id', 'folders.name as folderName')
     .from('notes')
     .leftJoin('folders', 'notes.folder_id', 'folders.id')
+    .leftJoin('notes_tags', 'notes.id', 'notes_tags.note_id')
+    .leftJoin('tags', 'notes_tags.tag_id', 'tags.id')
     .modify(function(queryBuilder) {
       if(searchTerm) {
         queryBuilder.where('title', 'like', `%${searchTerm}%`);
