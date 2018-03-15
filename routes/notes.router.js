@@ -149,18 +149,16 @@ router.post('/notes', (req, res, next) => {
     .catch(err => next(err));
   */
 
-  let noteId;
   // Insert new note, instead of returning all the fields, just return the new `id`
   knex.insert(newItem)
     .into('notes')
     .returning('id')
     .then(([id]) => {
-      noteId = id;
       // Using the new id, select the new note and the folder
       return knex.select('notes.id', 'title', 'content', 'folder_id', 'folders.name as folder_name')
         .from('notes')
         .leftJoin('folders', 'notes.folder_id', 'folders.id')
-        .where('notes.id', noteId);
+        .where('notes.id', id);
     })
     .then(([result]) => {
       res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
