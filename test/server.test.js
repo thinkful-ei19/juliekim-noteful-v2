@@ -71,18 +71,22 @@ describe('Basic Express setup', () => {
 });
 
 describe('Noteful API', function () {
+  //before all tests
   before(function () {
     // noop
   });
 
+  //before each test
   beforeEach(function () {
-    return seedData();
+    return seedData(); //DELETE all data, then inserts new Data
   });
 
+  //after each tests
   afterEach(function () {
     // noop
   });
 
+  //after all tests
   after(function () {
     return knex.destroy(); // destroy the connection
   });
