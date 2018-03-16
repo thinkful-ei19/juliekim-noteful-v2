@@ -94,7 +94,7 @@ describe('Noteful API', function () {
 
 
   describe('GET /api/notes', function () {
-
+    //see example - done
     it('should return the default of 10 Notes ', function () {
       let count;
       return knex.count()
@@ -126,7 +126,7 @@ describe('Noteful API', function () {
         });
     });
 
-
+    //see example - done
     it('should return correct search results for a searchTerm query', function () {
       let res;
       return chai.request(app).get('/api/notes?searchTerm=gaga')
@@ -144,7 +144,7 @@ describe('Noteful API', function () {
         });
     });
 
-
+    //see example - done
     it('should search by folder id', function () {
       const dataPromise = knex.select()
         .from('notes')
@@ -196,7 +196,7 @@ describe('Noteful API', function () {
   });
 
   describe('POST /api/notes', function () {
-
+    //see example - done
     it('should create and return a new item when provided valid data', function () {
       const newItem = {
         'title': 'The best article about cats ever!',
