@@ -112,6 +112,20 @@ describe('Noteful API', function () {
     });
 
     it('should return a list with the correct right fields', function () {
+      let count;
+      return knex.count()
+      .from('notes')
+      .then(([result]) => {
+        count = Number(result.count);
+        return chai.request(app).get('/api/notes');
+      })
+      .then(function (res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.have.length(count);
+      });
+  });
       return chai.request(app)
         .get('/api/notes')
         .then(function (res) {
