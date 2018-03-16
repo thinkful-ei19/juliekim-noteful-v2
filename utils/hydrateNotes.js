@@ -1,9 +1,14 @@
 'use strict';
 
 function hydrateNotes(input) {
+  //input is an array of objects
   const hydrated = [], lookup = {};
   for (let note of input) {
     if (!lookup[note.id]) {
+      //console.log('lookup obj', lookup);
+      //console.log('hydrated array', hydrated);
+      //{100: NoteObject, 102: NoteObject}
+      //hydrated = [ NoteObject, NoteObject, NoteObject ]
       lookup[note.id] = note;
       lookup[note.id].tags = [];
       hydrated.push(lookup[note.id]);
