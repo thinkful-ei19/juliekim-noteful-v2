@@ -151,8 +151,8 @@ router.put('/notes/:id', (req, res, next) => {
     })
     .then(result => {
       if(result) {
-        const hydrated = hydrateNotes(result);
-        res.json(hydrated[0]);
+        const [hydrated] = hydrateNotes(result);
+        res.json(hydrated);
       } else {
         next();
       }
@@ -173,31 +173,6 @@ router.post('/notes', (req, res, next) => {
     return next(err);
   }
 
-  /*
-  notes.create(newItem)
-    .then(item => {
-      if (item) {
-        res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
-      } 
-    })
-    .catch(err => next(err));
-  */
-
-  // Insert new note, instead of returning all the fields, just return the new `id`
-  // knex.insert(newItem)
-  //   .into('notes')
-  //   .returning('id')
-  //   .then(([id]) => {
-  //     // Using the new id, select the new note and the folder
-  //     return knex.select('notes.id', 'title', 'content', 'folder_id', 'folders.name as folder_name')
-  //       .from('notes')
-  //       .leftJoin('folders', 'notes.folder_id', 'folders.id')
-  //       .where('notes.id', id);
-  //   })
-  //   .then(([result]) => {
-  //     res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
-  //   })
-  //   .catch(err => next(err));
 
   let noteId;
   // Insert new note into notes table
@@ -222,7 +197,7 @@ router.post('/notes', (req, res, next) => {
     .then(result => {
       if (result) {
       // Hydrate the results
-        const hydrated = hydrateNotes(result)[0];
+        const [hydrated] = hydrateNotes(result);
         // Respond with a location header, a 201 status and a note object
         res.location(`${req.originalUrl}/${hydrated.id}`).status(201).json(hydrated);
       } else {
