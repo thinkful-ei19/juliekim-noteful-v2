@@ -79,7 +79,8 @@ router.get('/notes/:id', (req, res, next) => {
         next();
       }
     })
-    .catch(err => next(err));
+    // .catch(err => next(err));
+    .catch(err => {console.error(err); res.sendStatus(500);});
 });
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
